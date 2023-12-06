@@ -3,6 +3,8 @@ from pygame.locals import *
 
 # test git hub
 
+# test other direction
+
 pygame.init()
 
 clock = pygame.time.Clock()
