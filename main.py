@@ -2,9 +2,6 @@ import pygame
 from pygame.locals import *
 import random
 
-# test git hub
-
-# test other direction
 
 pygame.init()
 
