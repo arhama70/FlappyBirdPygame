@@ -8,11 +8,17 @@ pygame.init()
 clock = pygame.time.Clock()
 fps = 60
 
-screen_width = 864
-screen_height = 936
+screen_width = 764
+screen_height = 636
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Flappy Bird")
+
+#define Font
+font = pygame.font.SysFont('Bauhaus 93', 60)
+
+#defin colours
+white = (255,255,255)
 
 # define game variables
 ground_scroll = 0
@@ -29,7 +35,11 @@ pass_pipe = False
 # load images
 bg = pygame.image.load('img/bg.png')
 ground_img = pygame.image.load('img/ground.png')
+button_img = pygame.image.load('img/restart.png')
 
+def draw_text(text, font, text_col, x , y):
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x, y))
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -98,6 +108,14 @@ class Pipe(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+class Button():
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+    def draw(self):
+        #draw button
+        screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
 bird_group = pygame.sprite.Group()
@@ -107,7 +125,8 @@ flappy = Bird(100, int(screen_height / 2))
 
 bird_group.add(flappy)
 
-
+#create restart button instance
+button = Button(screen_width // 2 -  50, screen_height // 2 - 100, button_img)
 
 run = True
 while run:
@@ -122,7 +141,7 @@ while run:
     pipe_group.draw(screen)
 
     #draw the gorund
-    screen.blit(ground_img, (ground_scroll, 768))
+    screen.blit(ground_img, (ground_scroll, 568))
 
     #check the score
     if len(pipe_group) > 0:
@@ -135,11 +154,14 @@ while run:
                 score += 1
                 pass_pipe = False
 
+    draw_text(str(score), font, white, int(screen_width / 2), 20)
+
+
     #look for collision
     if pygame.sprite.groupcollide(bird_group, pipe_group, False, False) or flappy.rect.top < 0:
         game_over = True
     #check if bird has hit the gorund
-    if flappy.rect.bottom >= 768:
+    if flappy.rect.bottom >= 568:
         game_over = True
         flying = False
 
@@ -161,6 +183,8 @@ while run:
             ground_scroll = 0
 
         pipe_group.update()
+
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
