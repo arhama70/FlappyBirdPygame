@@ -31,7 +31,6 @@ last_pipe = pygame.time.get_ticks() - pipe_frequency
 score = 0
 pass_pipe = False
 
-
 # load images
 bg = pygame.image.load('img/bg.png')
 ground_img = pygame.image.load('img/ground.png')
@@ -75,10 +74,10 @@ class Bird(pygame.sprite.Sprite):
 
         if game_over == False:
             #jump
-            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                self.clicked  = True
+            if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clicked = True
                 self.vel= -10
-            if pygame.mouse.get_pressed()[0] == 0:
+            if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.mouse.get_pressed()[0] == 0:
                 self.clicked = False
 
             # handle the animation
@@ -213,7 +212,7 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        if event.type == pygame.MOUSEBUTTONDOWN and flying == False and game_over == False:
+        if event.type == pygame.MOUSEBUTTONDOWN or pygame.key.get_pressed()[pygame.K_SPACE] and flying == False and game_over == False:
             flying = True
 
 
