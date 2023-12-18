@@ -16,9 +16,11 @@ pygame.display.set_caption("Flappy Bird")
 
 #define Font
 font = pygame.font.SysFont('Bauhaus 93', 60)
+start = pygame.font.SysFont('Bauhaus 93', 30)
 
 #defin colours
 white = (255,255,255)
+black = (0, 0, 0)
 
 # define game variables
 ground_scroll = 0
@@ -30,6 +32,7 @@ pipe_frequency = 1500 #milliseconds
 last_pipe = pygame.time.get_ticks() - pipe_frequency
 score = 0
 pass_pipe = False
+
 
 # load images
 bg = pygame.image.load('img/bg.png')
@@ -67,8 +70,8 @@ class Bird(pygame.sprite.Sprite):
         #gravity
         if flying == True:
             self.vel += 0.5
-            if self.vel > 8:
-                self.vel = 8
+            if self.vel > 7:
+                self.vel = 7
             if self.rect.bottom < 768:
                 self.rect.y += int(self.vel)
 
@@ -145,7 +148,7 @@ flappy = Bird(100, int(screen_height / 2))
 bird_group.add(flappy)
 
 #create restart button instance
-button = Button(screen_width // 2 -  50, screen_height // 2 - 100, button_img)
+button = Button(screen_width // 2 - 50, screen_height // 2 - 100, button_img)
 
 run = True
 while run:
@@ -174,6 +177,12 @@ while run:
                 pass_pipe = False
 
     draw_text(str(score), font, white, int(screen_width / 2), 20)
+
+    # Tell to press space or click
+    if game_over == False and flying == False:
+        draw_text("PRESS 'SPACE' OR 'LEFT CLICK' TO START PLAYING", start, black,\
+                  int(screen_width / 4 - 120), int(screen_height/2 - 70))
+
 
 
     #look for collision
