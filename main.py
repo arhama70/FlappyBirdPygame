@@ -16,7 +16,7 @@ pygame.display.set_caption("Flappy Bird")
 
 #define Font
 font = pygame.font.SysFont('Bauhaus 93', 60)
-start = pygame.font.SysFont('Bauhaus 93', 30)
+click_to_play = pygame.font.SysFont('Bauhaus 93', 30)
 
 #defin colours
 white = (255,255,255)
@@ -38,10 +38,21 @@ pass_pipe = False
 bg = pygame.image.load('img/bg.png')
 ground_img = pygame.image.load('img/ground.png')
 button_img = pygame.image.load('img/restart.png')
+button_img = pygame.transform.scale(button_img, (150, 150))
+menu_img = pygame.image.load('img/menu.png')
+menu_img = pygame.transform.scale(menu_img, (150, 150))
+start_img = pygame.image.load('img/start.png')
 
 def draw_text(text, font, text_col, x , y):
     img = font.render(text, True, text_col)
     screen.blit(img, (x, y))
+
+def start_page():
+    pipe_group.empty()
+    flappy.rect.x = 100
+    flappy.rect.y = int(screen_height / 2)
+    score = 0
+    return score
 
 def reset_game():
     pipe_group.empty()
@@ -117,7 +128,34 @@ class Pipe(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+#draw Restart button
 class Button():
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+    def draw(self):
+
+        action = False
+
+        #get mouse position
+        pos = pygame.mouse.get_pos()
+
+        #check if mouse is over the button
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                action = True
+
+        #draw button
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+        return action
+
+#create restart button instance
+button = Button(screen_width // 2 -50 , screen_height // 2 -150 , button_img)
+
+#draw Menu button
+class Menu():
     def __init__(self, x, y, image):
         self.image = image
         self.rect = self.image.get_rect()
@@ -147,8 +185,9 @@ flappy = Bird(100, int(screen_height / 2))
 
 bird_group.add(flappy)
 
-#create restart button instance
-button = Button(screen_width // 2 - 50, screen_height // 2 - 100, button_img)
+
+#create menu button instance
+button_2 = Menu(screen_width // 2 - 50 , screen_height // 2 - 50 , menu_img)
 
 run = True
 while run:
@@ -180,7 +219,7 @@ while run:
 
     # Tell to press space or click
     if game_over == False and flying == False:
-        draw_text("PRESS 'SPACE' OR 'LEFT CLICK' TO START PLAYING", start, black,\
+        draw_text("PRESS 'SPACE' OR 'LEFT CLICK' TO START PLAYING", click_to_play, black,\
                   int(screen_width / 4 - 120), int(screen_height/2 - 70))
 
 
@@ -217,6 +256,14 @@ while run:
         if button.draw() == True:
             game_over = False
             score = reset_game()
+
+    if game_over == True and button_2.draw() == True:
+        print ("hi")
+        game_over = False
+        score = start_page()
+
+
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
