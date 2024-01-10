@@ -32,6 +32,7 @@ pipe_frequency = 1500  # milliseconds
 last_pipe = pygame.time.get_ticks() - pipe_frequency
 score = 0
 pass_pipe = False
+start = True
 
 # load images
 bg = pygame.image.load('img/bg.png')
@@ -42,6 +43,8 @@ menu_img = pygame.image.load('img/menu.png')
 menu_img = pygame.transform.scale(menu_img, (150, 150))
 start_img = pygame.image.load('img/start.png')
 start_img = pygame.transform.scale(start_img, (150, 150))
+arrow_img = pygame.image.load('img/arrow.png')
+arrow_img = pygame.transform.scale(arrow_img, (150, 150))
 
 
 def draw_text(text, font, text_col, x, y):
@@ -54,11 +57,11 @@ def start_page():
     pipe_group.empty()
     flappy.rect.x = 100
     flappy.rect.y = int(screen_height / 2)
-    button_3.draw()
+    arrow.draw()
 
 
 # draw start button
-class Start():
+class Arrow():
     def __init__(self, x, y, image):
         self.image = image
         self.rect = self.image.get_rect()
@@ -82,7 +85,7 @@ class Start():
         return action
 
 
-button_3 = Start(screen_width // 2 - 100, screen_height // 2 - 100, start_img)
+arrow = Arrow(screen_width // 2 - 100, screen_height // 2 - 100, arrow_img)
 
 
 def reset_game():
@@ -254,8 +257,14 @@ while run:
 
     draw_text(str(score), font, white, int(screen_width / 2), 20)
 
+    if game_over == False and flying == False and start == True:
+        arrow.draw()
+        start_page()
+
     # Tell to press space or click
-    if game_over == False and flying == False:
+    if game_over == False and flying == False and start == False:
+
+
         draw_text("PRESS 'SPACE' OR 'LEFT CLICK' TO START PLAYING", click_to_play, black, \
                   int(screen_width / 4 - 120), int(screen_height / 2 - 70))
 
@@ -290,6 +299,7 @@ while run:
     if game_over == True:
         if button.draw() == True:
             game_over = False
+            start = False
             score = reset_game()
 
     if game_over == True:
@@ -297,6 +307,7 @@ while run:
             print("hi")
             game_over = False
             main = start_page()
+            start = True
             score = reset_game()
 
     for event in pygame.event.get():
