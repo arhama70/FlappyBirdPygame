@@ -52,41 +52,6 @@ def draw_text(text, font, text_col, x, y):
     screen.blit(img, (x, y))
 
 
-def start_page():
-    print("start page ")
-    pipe_group.empty()
-    flappy.rect.x = 100
-    flappy.rect.y = int(screen_height / 2)
-    arrow.draw()
-
-
-# draw start button
-class Arrow():
-    def __init__(self, x, y, image):
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-
-    def draw(self):
-
-        action = False
-
-        # get mouse position
-        pos = pygame.mouse.get_pos()
-
-        # check if mouse is over the button
-        if self.rect.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1:
-                action = True
-
-        # draw button
-        screen.blit(self.image, (self.rect.x, self.rect.y))
-
-        return action
-
-
-arrow = Arrow(screen_width // 2 - 100, screen_height // 2 - 100, arrow_img)
-
 
 def reset_game():
     pipe_group.empty()
@@ -191,32 +156,7 @@ class Button():
 
 
 # create restart button instance
-button = Button(screen_width // 2 - 50, screen_height // 2 - 150, button_img)
-
-
-# draw Menu button
-class Menu():
-    def __init__(self, x, y, image):
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-
-    def draw(self):
-
-        action = False
-
-        # get mouse position
-        pos = pygame.mouse.get_pos()
-
-        # check if mouse is over the button
-        if self.rect.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1:
-                action = True
-
-        # draw button
-        screen.blit(self.image, (self.rect.x, self.rect.y))
-
-        return action
+button = Button(screen_width // 2 - 50, screen_height // 2 - 100, button_img)
 
 
 bird_group = pygame.sprite.Group()
@@ -226,8 +166,6 @@ flappy = Bird(100, int(screen_height / 2))
 
 bird_group.add(flappy)
 
-# create menu button instance
-button_2 = Menu(screen_width // 2 - 50, screen_height // 2 - 50, menu_img)
 
 run = True
 while run:
@@ -257,16 +195,14 @@ while run:
 
     draw_text(str(score), font, white, int(screen_width / 2), 20)
 
-    if game_over == False and flying == False and start == True:
-        arrow.draw()
-        start_page()
 
     # Tell to press space or click
-    if game_over == False and flying == False and start == False:
-
-
+    if game_over == False and flying == False:
         draw_text("PRESS 'SPACE' OR 'LEFT CLICK' TO START PLAYING", click_to_play, black, \
-                  int(screen_width / 4 - 120), int(screen_height / 2 - 70))
+                  int(screen_width / 4 - 120), int(screen_height / 2 - 100))
+
+        draw_text("High score:" +str(score), click_to_play, black, int(screen_width / 4 - 180)\
+                  , int(screen_height / 4 - 120))
 
     # look for collision
     if pygame.sprite.groupcollide(bird_group, pipe_group, False, False) or flappy.rect.top < 0:
@@ -277,6 +213,8 @@ while run:
         flying = False
 
     if game_over == False and flying == True:
+        draw_text("High score:" + str(score), click_to_play, black, int(screen_width / 4 - 180),\
+                  int(screen_height / 4 - 120))
 
         # generate new pipes
         time_now = pygame.time.get_ticks()
@@ -299,16 +237,8 @@ while run:
     if game_over == True:
         if button.draw() == True:
             game_over = False
-            start = False
             score = reset_game()
 
-    if game_over == True:
-        if button_2.draw() == True:
-            print("hi")
-            game_over = False
-            main = start_page()
-            start = True
-            score = reset_game()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
