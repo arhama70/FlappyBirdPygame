@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import random
+import csv
 
 pygame.init()
 
@@ -33,6 +34,13 @@ last_pipe = pygame.time.get_ticks() - pipe_frequency
 score = 0
 pass_pipe = False
 start = True
+
+#csv variables and code
+filename = 'Highscores.csv'
+with open(filename, 'w', newline="") as file:
+    csvwriter = csv.writer(file)  # 2. create a csvwriter object
+    csvwriter.writerow('Highscore')  # 4. write the header
+    #csvwriter.writerows()  # 5. write the rest of the data
 
 # load images
 bg = pygame.image.load('img/bg.png')
@@ -235,6 +243,8 @@ while run:
 
     # check for game over and reset
     if game_over == True:
+        draw_text("High score:" + str(score), click_to_play, black, int(screen_width / 4 - 180) \
+                  , int(screen_height / 4 - 120))
         if button.draw() == True:
             game_over = False
             score = reset_game()
