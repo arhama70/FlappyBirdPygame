@@ -35,12 +35,7 @@ score = 0
 pass_pipe = False
 start = True
 
-#csv variables and code
-filename = 'Highscores.csv'
-with open(filename, 'w', newline="") as file:
-    csvwriter = csv.writer(file)  # 2. create a csvwriter object
-    csvwriter.writerow('Highscore')  # 4. write the header
-    #csvwriter.writerows()  # 5. write the rest of the data
+
 
 # load images
 bg = pygame.image.load('img/bg.png')
@@ -101,6 +96,8 @@ class Bird(pygame.sprite.Sprite):
                 self.vel = -10
             if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.mouse.get_pressed()[0] == 0:
                 self.clicked = False
+
+
 
             # handle the animation
             self.counter += 1
@@ -209,8 +206,6 @@ while run:
         draw_text("PRESS 'SPACE' OR 'LEFT CLICK' TO START PLAYING", click_to_play, black, \
                   int(screen_width / 4 - 120), int(screen_height / 2 - 100))
 
-        draw_text("High score:" +str(score), click_to_play, black, int(screen_width / 4 - 180)\
-                  , int(screen_height / 4 - 120))
 
     # look for collision
     if pygame.sprite.groupcollide(bird_group, pipe_group, False, False) or flappy.rect.top < 0:
@@ -221,8 +216,6 @@ while run:
         flying = False
 
     if game_over == False and flying == True:
-        draw_text("High score:" + str(score), click_to_play, black, int(screen_width / 4 - 180),\
-                  int(screen_height / 4 - 120))
 
         # generate new pipes
         time_now = pygame.time.get_ticks()
@@ -243,11 +236,10 @@ while run:
 
     # check for game over and reset
     if game_over == True:
-        draw_text("High score:" + str(score), click_to_play, black, int(screen_width / 4 - 180) \
-                  , int(screen_height / 4 - 120))
         if button.draw() == True:
             game_over = False
             score = reset_game()
+
 
 
     for event in pygame.event.get():
